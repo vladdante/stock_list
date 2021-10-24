@@ -46,7 +46,7 @@
                       id="items"
                       name="list"
     >
-      <div class="item" v-for="(item, index) in items" :key="index">
+      <div class="item" v-for="(item, index) in sortItems" :key="index">
         <button class="item-remove" @click="removeItem(index)">
           <font-awesome-icon :icon="['fas', 'trash']" />
         </button>
@@ -73,14 +73,13 @@ export default {
     sortParam: "",
     error_message: "Поле является обязательным. "
   }),
-  validations () { return {
+  validations: () => ({
     item_form: {
       name: { required },
       image: { required, url },
       price: { required, numeric }
     }
-  }
-  },
+  }),
   created() { this.getSomeItems() },
   computed: {
     submit() {
@@ -88,10 +87,11 @@ export default {
     },
     sortItems() {
       switch (this.sortParam) {
-        // case "default": return this.items
-        case "min": return this.items.sort((a, b) => { return (a.price > b.price) ? 1 : -1 })
-        case "max": return this.items.sort((a, b) => { return (a.price < b.price) ? 1 : -1 })
-        case "name": return this.items.sort((a, b) => { return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1 })
+        // case "default": return this.getSomeItems()
+        case "min": return this.sortMin()
+        case "max": return this.sortMax()
+        case "name": return this.sortByName()
+        default: return this.items
       }
     }
   },
@@ -109,7 +109,10 @@ export default {
       if (description) {
         let max_length = 200
         return description.slice(0, max_length) + (description.length > max_length ? " ..." : "")
-    }}
+    }},
+    sortMax() { return this.items.sort((a, b) => { return (Number(a.price) < Number(b.price)) ? 1 : -1 }) },
+    sortMin() { return this.items.sort((a, b) => { return (Number(a.price) > Number(b.price)) ? 1 : -1 }) },
+    sortByName() { return this.items.sort((a, b) => { return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1 }) }
   }
 }
 </script>
