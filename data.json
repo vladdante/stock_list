@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Canon EOS 80D Kit",
+    "description": "25.80 МП, размер матрицы: APS-C, SD, поддержка RAW, Wi-Fi, скорость съемки: 7 кадров/с, видео разрешением до 1920x1080",
+    "image": "https://www.canon.ru/for_home/product_finder/cameras/digital_slr/eos-80d/assets/images/360/A_035.png",
+    "price": "79000"
+  },
+  {
+    "name": "Panasonic Lumix DC-S5KEE-K",
+    "description": "Гибридная беззеркальная камера с полнокадровым сенсором, записью видео 10 бит 4K 60p, функцией V-Log с поддержкой 14+ стопов, а также массой других возможностей — и все это в невероятно компактном и легком корпусе.",
+    "image": "https://www.flipsidegadgets.com/wp-content/uploads/2021/09/1716942010-scaled.jpg",
+    "price": "164990"
+  },
+  {
+    "name": "Panasonic Lumix DMC-ZS100/TZ100",
+    "description": "Отлично снимает в солнечную погоду, шикарный зум. Удобный тач скрин, который использую только для фокусировки. Нравится, что пишет все файлы в одну папку (и видео и фото).",
+    "image": "https://www.ephotozine.com/articles/panasonic-lumix-tz100-review-29020/images/1000-Panasonic-Lumix-TZ100-Silver-6_1457524634.jpg",
+    "price": "38300"
+  },
+  {
+    "name": "Fujifilm X-S10 Body",
+    "description": "Несмотря на компактный корпус, X-S10 обладает передовыми характеристиками, такими как матрица X-TransTM CMOS 4 с разрешением 26,1Мп, высокоскоростной процессор обработки изображений X-Processor 4 и встроенный механизм стабилизации изображений (IBIS).",
+    "image": "https://cdn.pocket-lint.com/r/s/1200x/assets/images/154165-cameras-review-hands-on-fujifilm-x-s10-review-image4-vpa0hnii3k.jpg",
+    "price": "85990"
+  },
+  {
+    "name": "Fujifilm X-S10 Kit 18-55mm",
+    "description": "X-S10 подойдет тем, кому нужна легкая камера с профессиональными функциями для фото и видеосъемки. В этой камере каждый найдет что-то для себя; востребованный режим AUTO/SP (Scene Position) автоматически устанавливает необходимые настройки, обеспечивая высокое качество изображения.",
+    "image": "https://www.amateurphotographer.co.uk/wp-content/uploads/2020/10/PA010421-acr.jpg",
+    "price": "119990"
+  },
+  {
+    "name": "Canon EOS M50 kit 18-150",
+    "description": "Камера Canon EOS M50 создана с использованием самых современных технологий и предлагает качество зеркальных цифровых камер в элегантном корпусе. ",
+    "image": "https://www.ligafoto.ru/upload/iblock/1a8/fbc8b510-2cd3-11e8-8def-001517ecd398_fbc8b512-2cd3-11e8-8def-001517ecd398.resize1.jpeg",
+    "price": "66316"
+  }
+]

@@ -4,27 +4,48 @@
     <div id="top_panel">
       <h1>Добавление товара</h1>
       <select>
-        <option>По умолчанию</option>
-        <option>По цене min</option>
-        <option>По цене max</option>
-        <option>По наименованию</option>
+        <option @click="sortParam='default'">По умолчанию</option>
+        <option @click="sortParam='min'">По цене min</option>
+        <option @click="sortParam='max'">По цене max</option>
+        <option @click="sortParam='name'">По наименованию</option>
       </select>
     </div>
 
     <div id="left_panel">
       <div class="label">Наименование товара<div class="dot">•</div></div>
-      <input v-model="item_form.name" placeholder="Введите наименование товара"/>
+      <input v-model="v$.item_form.name.$model"
+             @blur="v$.item_form.name.$touch"
+             :class="{ 'error-frame': v$.item_form.name.$error }"
+             placeholder="Введите наименование товара"
+      />
+      <div v-if="v$.item_form.name.$error" class="error">{{ error_message }}</div>
+
       <div class="label">Описание товара</div>
       <textarea v-model="item_form.description" placeholder="Введите описание товара"/>
+
       <div class="label">Ссылка на изображение товара<div class="dot">•</div></div>
-      <input v-model="item_form.image" placeholder="Введите ссылку"/>
+      <input v-model="v$.item_form.image.$model"
+             @blur="v$.item_form.image.$touch"
+             :class="{ 'error-frame': v$.item_form.image.$error }"
+             placeholder="Введите ссылку"
+      />
+      <div v-if="v$.item_form.image.$error" class="error">{{ error_message }} Введите ссылку, начинающуюся с "http(s)://"</div>
+
       <div class="label">Цена товара<div class="dot">•</div></div>
-      <input v-model="item_form.price" placeholder="Введите цену"/>
+      <input v-model="v$.item_form.price.$model"
+             @blur="v$.item_form.price.$touch"
+             :class="{ 'error-frame': v$.item_form.price.$error }"
+             placeholder="Введите цену"
+      />
+      <div v-if="v$.item_form.price.$error" class="error">{{ error_message }} Веедите только цифры.</div>
 
       <button :disabled="!submit" @click="addItem">Добавить товар</button>
     </div>
 
-    <div id="items">
+    <transition-group tag="div"
+                      id="items"
+                      name="list"
+    >
       <div class="item" v-for="(item, index) in items" :key="index">
         <button class="item-remove" @click="removeItem(index)">
           <font-awesome-icon :icon="['fas', 'trash']" />
@@ -32,48 +53,63 @@
         <img class="item-image" :src="item.image"/>
         <div class="item-block">
           <p class="item-block-name">{{ item.name }}</p>
-          <p class="item-block-description">{{ item.description }}</p>
+          <p class="item-block-description">{{ correctDescription(item.description) }}</p>
           <p class="item-block-price">{{ correctPrice(item.price) }}</p>
         </div>
       </div>
-    </div>
+    </transition-group>
 
   </div>
 </template>
 
 <script>
+import useVuelidate from "@vuelidate/core"
+import { required, url, numeric } from "@vuelidate/validators"
 export default {
+  setup: () => ({ v$: useVuelidate() }),
   data: () => ({
-    components: { },
     items: [],
-    item_form: { name: null, image: null, description: null, price: null }
+    item_form: { name: null, image: null, description: null, price: null },
+    sortParam: "",
+    error_message: "Поле является обязательным. "
   }),
-  created() {
-    this.getSomeItems()
+  validations () { return {
+    item_form: {
+      name: { required },
+      image: { required, url },
+      price: { required, numeric }
+    }
+  }
   },
+  created() { this.getSomeItems() },
   computed: {
-    submit: function () { return this.item_form.name && this.item_form.image && this.item_form.price }
+    submit() {
+      return !this.v$.item_form.name.$invalid && !this.v$.item_form.image.$invalid && !this.v$.item_form.price.$invalid
+    },
+    sortItems() {
+      switch (this.sortParam) {
+        // case "default": return this.items
+        case "min": return this.items.sort((a, b) => { return (a.price > b.price) ? 1 : -1 })
+        case "max": return this.items.sort((a, b) => { return (a.price < b.price) ? 1 : -1 })
+        case "name": return this.items.sort((a, b) => { return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1 })
+      }
+    }
   },
   methods: {
-    getSomeItems() {
-      for (let i = 0; i < 9; i++) {
-        this.items[i] = {
-          name: "Наименование товара",
-          image: "https://i.pcmag.com/imagery/roundups/018cwxjHcVMwiaDIpTnZJ8H-22..1570842461.jpg",
-          description: `Довольно таки интересное описание товара в несколько строк.
-                          Довольно таки интересное описание товара в несколько строк.`,
-          price: "10000"
-        }
-      }
-    },
+    getSomeItems() { this.items = require("../data.json") },
     addItem() {
       this.items.unshift(this.item_form)
       this.item_form = {}
     },
     removeItem(id) {
-      this.items.splice(id, 1)
+      this.items.splice(id,1)
     },
-    correctPrice(price) { return parseFloat(price).toLocaleString("ru")  + " руб." }
+    correctPrice(price) { return parseFloat(price).toLocaleString("ru")  + " руб." },
+    correctDescription(description) {
+      if (description) {
+        let max_length = 200
+        return description.slice(0, max_length) + (description.length > max_length ? " ..." : "")
+    }}
   }
 }
 </script>
@@ -160,21 +196,23 @@ body
   flex-wrap: wrap
 
 .item
-  flex: 1 1 31%
-  margin: 1%
-  box-shadow: rgba(0, 0, 0, 0.2) 0 5px 15px
   border-radius: $corner
+  box-shadow: rgba(0, 0, 0, 0.2) 0 5px 15px
   display: flex
+  flex: 1 1 31%
   flex-direction: column
+  margin: 1%
+  transition: all 1s
   &:hover
     cursor: pointer
     & > .item-remove
-      cursor: pointer
       display: block
+      cursor: pointer
   &-image
-    width: 100%
-    border-top-right-radius: $corner
     border-top-left-radius: $corner
+    border-top-right-radius: $corner
+    height: 280px
+    width: 100%
   &-remove
     position: absolute
     align-self: flex-end
@@ -189,11 +227,28 @@ body
     transition: 0.5s
     -webkit-transition: 0.5s
   &-block
+    display: flex
+    flex-direction: column
+    height: 100%
+    justify-content: space-between
     padding: 5%
     &-name
       font-weight: bold
     &-price
       font-weight: bold
+
+.error
+  color: red
+  font-size: 0.6em
+  &-frame
+    border: solid 1px red !important
+
+.list-enter, .list-leave-to
+  opacity: 0
+  transform: translateY(1px)
+
+.list-leave-active
+  position: absolute
 
 @media only screen and (max-width: 768px)
   #stock_list
