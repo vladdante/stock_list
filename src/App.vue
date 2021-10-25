@@ -46,7 +46,7 @@
                       id="items"
                       name="list"
     >
-      <div class="item" v-for="(item, index) in sortItems" :key="index">
+      <div class="item list-item" v-for="(item, index) in sortItems" :key="item">
         <button class="item-remove" @click="removeItem(index)">
           <font-awesome-icon :icon="['fas', 'trash']" />
         </button>
@@ -118,16 +118,19 @@ export default {
 </script>
 
 <style lang="sass">
+$box_shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0
+$panel_shadow: rgba(0, 0, 0, 0.2) 0 5px 15px
 $corner: 7px
+$red: red
 
 body
   font: 1.2em "Ubuntu", sans-serif
 
 #stock_list
   display: grid
-  grid-template-columns: 25% 75%
   grid-auto-rows: 20% 80%
   grid-template-areas: "head head" "sidebar main"
+  grid-template-columns: 25% 75%
 
 #top_panel
   grid-area: head
@@ -140,7 +143,7 @@ body
     background-color: white
     border: none
     border-radius: $corner
-    box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0
+    box-shadow: $box_shadow
     padding: 10px
     height: fit-content
     font-size: 0.8em
@@ -151,7 +154,7 @@ body
   margin: 3%
   padding: 3%
   height: fit-content
-  box-shadow: rgba(0, 0, 0, 0.2) 0 5px 15px
+  box-shadow: $panel_shadow
   border-radius: $corner
   position: sticky
   position: -webkit-sticky
@@ -161,7 +164,7 @@ body
     font-size: 0.8em
     display: flex
     .dot
-      color: red
+      color: $red
       line-height: 5px
       padding: 2px
   input, textarea
@@ -170,7 +173,7 @@ body
     font-size: 0.8em
     padding: 10px
     margin: 10px 0
-    box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0
+    box-shadow: $box_shadow
     &::placeholder
       color: #606060
     &:focus-visible
@@ -200,12 +203,11 @@ body
 
 .item
   border-radius: $corner
-  box-shadow: rgba(0, 0, 0, 0.2) 0 5px 15px
+  box-shadow: $panel_shadow
   display: flex
-  flex: 1 1 31%
   flex-direction: column
   margin: 1%
-  transition: all 1s
+  width: 31%
   &:hover
     cursor: pointer
     & > .item-remove
@@ -241,17 +243,19 @@ body
       font-weight: bold
 
 .error
-  color: red
+  color: $red
   font-size: 0.6em
   &-frame
-    border: solid 1px red !important
+    border: solid 1px $red !important
 
-.list-enter, .list-leave-to
+.list-item
+  transition: all 0.8s ease
+.list-enter-from, .list-leave-to
   opacity: 0
-  transform: translateY(1px)
-
+  transform: translateY(30px)
 .list-leave-active
   position: absolute
+
 
 @media only screen and (max-width: 768px)
   #stock_list
@@ -265,4 +269,5 @@ body
     display: block
   .item
     margin: 20px
+    width: auto
 </style>
